@@ -1,0 +1,162 @@
+header{
+    background: #1565c0;
+}
+
+body{
+    margin: 0;
+    background: #ededed;
+    font-family: 'Century Gothic', sans-serif;
+}
+
+#content {
+    background: #FFF;
+    margin-left: auto;
+    margin-right: auto;
+    padding-top: 1em;
+    padding-left: 1em;
+    padding-right: 1em;
+    max-width: 1000px;
+}
+
+canvas {
+    padding-left: 0;
+    padding-right: 0;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+}
+
+p {
+    font-family: "Open Sans",sans-serif;
+    color: #212121;
+    line-height: 2em;
+    margin-bottom: 1em;
+}
+
+h5 {
+    margin: 0;
+    padding-left: 0;
+    color: rgba(47,47,47,0.7);
+}
+
+h2, h3 {
+    margin: 0;
+    padding-left: 0;
+}
+
+
+#logo{
+    font-size: 2.5em;
+    letter-spacing: -0.06em;
+    font-weight: 100;
+}
+
+.wrapper{
+    width: 80%;
+    margin: 0px auto;
+}
+
+.navbar{
+    vertical-align: middle;
+    display: grid;
+    grid-column-gap: 1em;
+    grid-template-columns: 3fr 1fr;
+}
+
+.navlinks{
+    display: grid;
+    grid-column-gap: 1em;
+    grid-template-columns: 1fr 1fr 1fr;
+    padding-top: 20px;
+}
+
+.navbar a{
+    color:#FFF;
+    text-decoration: none;
+    font-weight: 100;
+    font-size: 1.25em;
+    letter-spacing: -0.03em;
+}
+
+.navlinks a:hover
+{
+     color:#000;
+     text-decoration:none;
+     cursor:pointer;
+}
+
+.ContentNav{
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 2em;
+    text-align: center;
+}
+
+.ContentNav a
+{
+    text-decoration: blue;
+}
+.ContentNav a:hover
+{
+    text-decoration: underline;
+}
+
+@media screen and (max-width:775px){
+
+    .navbar{
+        text-align: center;
+        grid-template-columns: 1fr;
+    }
+    .navlinks{
+        display: grid;
+        text-align: center;
+        grid-template-columns: 1fr 1fr 1fr;
+    }
+   
+    p {
+        font-size: 1em;
+    }
+
+    #content {
+        padding: 1em;
+        padding-top: 1em;
+    }
+   h5 {
+    margin: 0;
+    padding-left: 0;
+    color: rgba(47,47,47,0.7);
+   }
+
+   h2 {
+    margin: 0;
+    padding-left: 0;
+   }
+}
+
+@media screen and (max-width:636px){
+.ContentNav{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 2em;
+    text-align: center
+}
+
+#content{
+   padding: 0.5em;
+}
+canvas{
+    width: 100%;
+}
+
+@media screen and (max-width:474px){
+
+#content{
+   padding: 0.5em;
+}
+.ContentNav{
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 2em;
+    text-align: center
+}
+}

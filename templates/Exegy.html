@@ -1,0 +1,120 @@
+{% extends "Base.html" %}
+{% block content %}
+
+<style>
+
+    a {
+        text-decoration: none;
+    }
+
+    #tip {
+        text-align: center;
+        font-style: italic;
+        color: #bec5d1;
+        padding-bottom: 1em;
+    }
+
+    p{
+        padding: 0.5em;
+        text-align: left;
+    }
+
+    li{
+    font-family: "Open Sans",sans-serif;
+    color: #212121;
+    line-height: 2em;
+    margin-bottom: 1em;
+   }
+
+    h1, h3, h5{
+        margin: 0;
+    } 
+
+    img{
+        width: 50%;
+        display: block;
+        margin: auto;
+    }
+
+    #replay{
+        width: 100%;
+        padding-bottom: 1em;
+    }
+    
+    #Java{
+        width: 50%;
+        padding: 1em;
+    }
+
+</style>
+
+
+<h1>Exegy</h1>
+<h5>Software Engineering Intern</h5>
+
+<img id="Java" src="https://image.ibb.co/g0ZOp5/exegy.jpg" alt="exegy" border="0" />
+<p>
+I had the opportunity to work with <a href="http://www.exegy.com/">Exegy</a>, a high-frequency trade data normalization firm as a software engineering intern in the Client API (XCAPI) team under <a href="https://www.linkedin.com/in/michael-kohn-0421922/">Mike Kohn</a>.
+I worked on several projects during my time at Exegy, and I would discuss them here but in a very general sense so as to comply with the NDA.
+</p>
+<h3>
+API Profiling
+</h3>
+<img id="Java" src="https://image.ibb.co/c0cCGk/Profiling.png" alt="Profiling" border="0" />
+<p>
+The first task I was assigned was to demonstrate the performance differences between the C and JAVA APIs as well as the how the differences between the current master branch and
+the newer feature branches, which promise improvement. As expected, the feature branches were significanlty better.
+I also had to validate the data I was testing, for which I wrote a script that compares the hashes of different request bodies for the feature branches and the already tested 
+Master branch. 
+Technical factors I took into consideration while profiling were
+<ul> 
+<li><strong>Data equivalency</strong>: Two processes corresponding to different API versions are compared on the closest matching data</li>
+<li><strong>Process Isolation</strong>: Both processes run on separate cores, and separate NUMA strips to avoid caching artifacts</li> 
+<li><strong>Removal of outliers</strong>: To remove artifacts due to non-reproducable events</li>
+</ul>
+</p>
+
+<h3>
+Web interface
+</h3>
+<p>
+At Exegy, we frequently used a command-line based testing utility. Being a terminal based utility meant issuing commands was slow, often 
+requiring the user to read up documentation to even perform simple tasks. My objective was to design a web interface which would abstract
+away the command-line part of the application, allowing the user to perform all the frequently used features with just a simple click of a
+button. I used Python/Flask for the backend, and Bootstrap with Jinja templating for the front end.<br> This is how it turned out to be:
+</p>
+<img id="replay" src="https://image.ibb.co/bTumia/Replay_Control.png" alt="Replay Control" border="0" />
+<img id="replay" src="https://image.ibb.co/hd5sOa/Ticker_Control.png" alt="Ticker Control" border="0" />
+    
+<h3>
+Java Client Application
+</h3>
+<p>
+My next task was to create an example application which we can give out to clients, giving them a stepping stone and showcasing the API features to them. This app needed to exist for the Java API, and it was required to be made with Swing since it's widely supported. This is the structure I came up with:
+<img id="replay"src="https://image.ibb.co/jabcpF/UML.png" alt="UML" border="0" />
+The end user application looked like this:
+<span>
+<img id="Java" src="https://image.ibb.co/cAdOUF/Login.png" alt="Login" border="0" />
+<img id="Java" src="https://image.ibb.co/gNte3a/MainPage.png" alt="MainPage" border="0" />
+</span>
+
+</p>
+
+<h3>
+Binary editor
+</h3>
+<p>
+The last project I worked on involved me writing a software library which will allow an existing utility to be able to edit binaries containing C/C++ objects. I wrote a script which would take as input the structure definition headers, and parse it to extract useful attributes such as type, identifiers, size etc. The script also needed to handle bit-fields, nested structures, and nested unions, and be able to edit every field inside those sub-structures as well. After parsing it, the script would generate C/C++ style code, which would constitute the software library I was supposed to develop, allowing for scalalbilty if more strucutures are modified, introduced or removed.
+Finally when the code generator part was complete, I had to integrate it to the existing utility, bringing the project to completion.
+The following snippets show the utility:
+</p>
+<img id="Java "src="https://image.ibb.co/ix2CPF/Gen_input.png" alt="Gen input" border="0" />
+<div id="tip">
+    Input
+</div>
+<img id="Java" src="https://image.ibb.co/e0mdya/Gen_ouptut.png" alt="Gen ouptut" border="0" />
+<div id="tip">
+    Output
+</div>
+
+{% endblock %}

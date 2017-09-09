@@ -1,0 +1,14 @@
+server {
+    listen 80;
+    server_name _;
+
+    location / {
+        include uwsgi_params;
+        uwsgi_pass unix:/var/sockets/uwsgi/Lumos.sock;
+    }
+
+    location ^~ /static/  {
+    include  /etc/nginx/mime.types;
+    root /home/pi/Lumos/;
+    }
+}

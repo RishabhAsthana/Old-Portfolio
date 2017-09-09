@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Rishabh Asthana</title>
+<link rel="SHORTCUT ICON" href="https://image.ibb.co/ddzDoa/coollogo_com_34401180.png">
+<link rel="stylesheet" href={{ url_for('static', filename='stylesheet.css')}} type="text/css">
+<link href="https://fonts.googleapis.com/css?family=Open+Sans:400,300,700" rel=stylesheet type=text/css>
+</head>
+    
+<body>
+<header>
+<div class="wrapper">
+<nav class="navbar">
+    <div id="logo"><a href="/">Rishabh Asthana</a></div>
+    <div class="navlinks">
+        <div><a href="{{url_for('About')}}">About</a></div>
+        <div><a href="{{ url_for('static', filename='ResumeFall17.pdf') }}">Resume</a></div>
+        <div><a href="mailto:asthana4@illinois.edu">Email</a></div>
+    </div>
+</nav>
+</div>
+</header>
+<div id="wrap">
+<div id="content">
+
+{% block content %}{% endblock %}
+</div>
+</div>
+</body>
+</html>

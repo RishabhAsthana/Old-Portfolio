@@ -1,0 +1,50 @@
+{% extends "Base.html" %}
+{% block content %}
+
+<style>
+    video {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        width: 99%;
+        height: auto;
+    }
+    a {
+        text-decoration: none;
+    }
+
+    #tip {
+        text-align: center;
+        font-style: italic;
+        color: #bec5d1;
+    }
+
+    p{
+        padding: 0.5em;
+        text-align: left;
+    }
+
+</style>
+
+
+<h2> TAV </h2>
+<h5> Music Visualizer </h5>
+<video autoplay controls loop><source id="webm" src="https://giant.gfycat.com/EnergeticTestyBlackbuck.webm" type="video/webm"><source id="mp4" src="http://giant.gfycat.com/EnergeticTestyBlackbuck.mp4" type="video/mp4"></video>
+<p>
+Built in <a href="https://processing.org/">Processing</a> (2.7), using <a href="http://code.compartmental.net/tools/minim/">minim</a> and <a href="http://www.sojamo.de/libraries/drop/">sDrop</a>
+<p>
+I worked on TAV (The Awesome Visualizer, I couldn't think of any interesting name back then) before starting college. I had recently picked up Processing and I was inspired
+by classic visualization present in iTunes, WinAmp, and Windows Media Player, so I decided to give it a try.
+</p>
+<p>
+The visualizer had a few major checkboxes to tick, which included ease of use, a nice UI, smooth framerates, and customizability. I managed to get most of them working
+however making them work in Processing was a challenge, since it doesn't support scaling, and UI, atleast it didn't when I was working with it. Still it was a good 
+experience making this.
+</p>
+<p>
+This visualizer can run on 1080p at 60fps on a 3rd gen i5 3337u, however requires a Java runtime
+</p>
+
+{% endblock %}

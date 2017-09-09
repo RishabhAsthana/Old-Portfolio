@@ -1,0 +1,50 @@
+{% extends "Base.html" %}
+{% block content %}
+
+<style>
+    video {
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+        width: 100%;
+        height: auto;
+    }
+    a {
+        text-decoration: none;
+    }
+
+    #tip {
+        text-align: center;
+        font-style: italic;
+        color: #bec5d1;
+    }
+
+    p{
+        padding: 0.5em;
+        text-align: left;
+    }
+
+</style>
+
+
+<h2> Lumos </h2>
+<h5> Music Visualizer </h5>
+<video autoplay controls loop><source id="webm" src="https://giant.gfycat.com/FrightenedValuableGreatwhiteshark.webm" type="video/webm"><source id="mp4" src="http://giant.gfycat.com/FrightenedValuableGreatwhiteshark.mp4" type="video/mp4"></video>
+<p>
+Built in <a href="https://processing.org/">Processing</a> (2.7), using <a href="http://code.compartmental.net/tools/minim/">minim</a> and <a href="http://www.sojamo.de/libraries/drop/">sDrop</a>
+<p>
+I worked on Lumos during the summer of my sophomore year. Having worked on a visualizer before, I figured out changes that would make the user experience better, more intuitive,
+and having the knowledge from the TAV, it was easy to get started on this project. 
+</p>
+<p>
+The areas I focused on this time around were centered around to make the visualizer a 'self-sufficient' entity, such that it wouldn't need any user input to function,
+however the user can request certain changes if they feel like it, and the visualzer would accomodate.
+</p>
+<p>
+This visualizer can run on 1080p at 60fps on a 3rd gen i5 3337u, however it still suffers with the problem of portability, which I think I would be able to solve in
+another iteration, using WebGL
+</p>
+
+{% endblock %}

@@ -1,0 +1,153 @@
+{% extends "Base.html" %}
+{% block content %}
+  
+<style>
+   
+    a {
+        text-decoration: none;
+    }
+
+    h5 {
+        margin: 0;
+        padding-left: 0.4em;
+        color: rgba(47,47,47,0.7);
+    }
+
+    h2 {
+        margin: 0;
+        padding-left: 0.2em;
+    }
+
+    #tip {
+        text-align: center;
+        font-style: italic;
+        color: #bec5d1;
+    }
+
+    p{
+        padding: 0.5em;
+        text-align: left;
+    }
+
+</style>
+
+<script id="shader-vs" type="x-shader/x-vertex">
+  
+    attribute vec3 aVertexNormal;
+    attribute vec3 aVertexPosition;
+    attribute vec2 aTextureCoord;
+    attribute vec3 aTangent;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+    uniform mat3 uNMatrix;
+    
+    uniform vec3 uLightPosition;
+    
+    varying vec3 vTangentLightDir;
+    varying vec3 vTangentEyeDir;
+    varying vec2 vTextureCoord;
+
+    void main(void) {
+    
+    vec4 vertex = uMVMatrix * vec4(aVertexPosition, 1.0);
+    
+    vec3 normal = vec3(uNMatrix * aVertexNormal);
+    vec3 tangent = vec3(uNMatrix * aTangent);
+    vec3 bitangent = cross(normal, tangent);
+    
+    mat3 tbnMatrix = mat3(
+        tangent.x, bitangent.x, normal.x,
+        tangent.y, bitangent.y, normal.y,
+        tangent.z, bitangent.z, normal.z
+    );
+    
+    vec3 lightDirection = uLightPosition - vertex.xyz;
+    vec3 eyeDirection = -vertex.xyz;
+    gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+    
+    vTextureCoord = aTextureCoord;
+    vTangentLightDir = lightDirection * tbnMatrix;
+    vTangentEyeDir = eyeDirection * tbnMatrix;
+
+    }
+</script>
+  
+<script id="shader-fs" type="x-shader/x-fragment">
+precision mediump float;
+uniform vec3 uAmbientLightColor;
+uniform vec3 uDiffuseLightColor;
+uniform vec3 uSpecularLightColor;
+
+uniform sampler2D u_image;
+
+varying vec2 vTextureCoord;
+varying vec3 vTangentLightDir;
+varying vec3 vTangentEyeDir;
+
+void main(void) {
+
+    const float shininess = 32.0;
+    
+    vec3 normal = normalize(2.0 * (texture2D(u_image, vTextureCoord).rgb - 0.5));
+    //vec3 normal = vec3(vTextureCoord, 1.0);
+    vec3 lightDirection = normalize(vTangentLightDir);
+
+    // Calculate n dot l for diffuse lighting
+    float diffuseLightWeightning = max(dot(normal, 
+                                    lightDirection), 0.0);
+                                       
+    // Calculate the reflection vector (r) that is needed for specular light
+    vec3 eyeDirection = normalize(vTangentEyeDir);
+    vec3 reflectionVector = normalize(reflect(-lightDirection, 
+                                             normal));
+    
+    // The camera in eye coordinates is located in the origin and is pointing
+    // along the negative z-axis. Calculate viewVector (v) 
+    // in eye coordinates as:
+    // (0.0, 0.0, 0.0) - vertexPositionEye3
+    vec3 viewVectorEye = -normalize(vTangentEyeDir);
+    
+    float rdotv = max(dot(reflectionVector, eyeDirection), 0.0);
+    
+    float specularLightWeightning = pow(rdotv, shininess);
+
+    // Sum up all three reflection components and send to the fragment shader
+    vec4 vColor = vec4((uAmbientLightColor
+                + uDiffuseLightColor * diffuseLightWeightning
+                + uSpecularLightColor * specularLightWeightning),1.0);
+    
+    gl_FragColor = vColor;
+ }
+</script>
+
+<script src="{{ url_for('static', filename='NormalMapping/gl-matrix-min.js')}}"></script> 
+<script src="{{ url_for('static', filename='NormalMapping/webgl-utils.js')}}"></script>
+<script src="{{ url_for('static', filename='NormalMapping/simpleModeling.js')}}"></script> 
+
+<script src="{{ url_for('static', filename='NormalMapping/Flight.js')}}"></script>  
+<h2> Normal Mapping </h2>
+<h5> Computer Graphics </h5>
+<canvas id="myGLCanvas" width="400" height="400"></canvas>
+<script>
+ window.onload=startup("{{ url_for('static', filename='NormalMapping/normal.jpg')}}");
+</script>
+<p id="tip">Click the sphere to cycle maps</p>
+<p>
+The sphere floating above appears to have a complex texture, which would lead one to think that it is a high polycount mesh, however it is not. 
+</p>
+<p>
+As part of my <a href="https://courses.engr.illinois.edu/cs418/fa2017/">CS 418</a> extra credit course work, my objective was to implement the technique of
+ <a href="https://en.wikipedia.org/wiki/Normal_mapping">Normal mapping</a> in pure WebGL.
+</p>
+<p>
+Instead of having a high polycount mesh to render the texture, we start with a low polycount mesh (relative to this context) and peturb the normals of 
+the low-poly count mesh according to information encoded in a normal map, which is computed using the geometry of the high polycount mesh. The trick is that the 
+normal map can be precomputed, and while rendering in a real-time application, we can simply apply the normal map to our low polycount mesh and obtain
+the same visual effect albeit at a much lower computation cost. One downside is that if shadows are calculated for the mesh, they would correspond to the
+low polycount mesh rather than the high polycount one, but in most use cases, we don't need to worry about it. This technique is widely used in the industry.
+</p>
+<p>
+NOTE: The seam on the sphere is because of improper UV mapping, which arises because of texture sampling mode in WebGL. I haven't found a good solution for this yet.
+</p>
+{% endblock %}

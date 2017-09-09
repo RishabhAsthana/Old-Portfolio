@@ -1,0 +1,53 @@
+{% extends "Base.html" %}
+{% block content %}
+<div class="ContentNav">
+
+  
+   <div id="Lumos">
+   <a href="{{ url_for('Lumos') }}">
+   <img src="https://image.ibb.co/j8Qmrv/Thumb_Lumos.png" alt="Thumb Lumos" border="0" />
+   </a>
+   <div><a href="{{ url_for('Lumos') }}">Lumos</a></div>
+   </div>
+   
+   <div id="TAV">
+   <a href="{{ url_for('TAV') }}">
+   <img src="https://image.ibb.co/eh1Rrv/Thumb_TAVn.png" alt="Thumb TAVn" border="0" />
+   </a>
+   <div><a href="{{ url_for('TAV') }}">TAV</a></div>
+   </div>
+
+    
+   <div id="Steganography">
+   <a href="{{ url_for('Steganography') }}">
+   <img src="https://image.ibb.co/d7J6rv/Thumb_Steganography.png" alt="Thumb Steganography" border="0" />
+   </a>
+   <div><a href="{{ url_for('Steganography') }}">Audio Steganography</a></div>
+   </div>
+
+   <div id="NormalMapping">
+   <a href="{{ url_for('NormalMap') }}">
+   <img src="https://image.ibb.co/ijJT4F/Thumb_Normal_Map.png" alt="Thumb Normal Map" border="0" />
+   </a>
+   <div><a href="{{ url_for('NormalMap') }}">Normal Mapping</a></div>
+   </div>
+   
+   <div id="EnvMapping">
+   <a href="{{ url_for('EnvironmentMap') }}">
+   <img src="https://image.ibb.co/eqWgPF/Thumb_Env_Map.png" alt="Thumb Env Map" border="0" />
+   </a>
+   <div><a href="{{ url_for('EnvironmentMap') }}">Environment Mapping</a></div>
+   </div>
+ 
+   <div id="Exegy">
+   <a href="{{ url_for('Exegy') }}">
+   <img src="https://image.ibb.co/frcAJa/Thumb_Exegy.png" alt="Thumb Exegy" border="0" />
+   </a>
+   <div><a href="{{ url_for('Exegy') }}">Exegy</a></div>
+   </div>
+
+
+  
+</div>
+
+{% endblock %}

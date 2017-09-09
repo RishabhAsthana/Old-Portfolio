@@ -1,0 +1,91 @@
+{% extends "Base.html" %}
+{% block content %}
+
+<style>
+
+    a {
+        text-decoration: none;
+    }
+
+    #tip {
+        text-align: center;
+        font-style: italic;
+        color: #bec5d1;
+        padding-bottom: 1em;
+    }
+
+    p{
+        padding: 0.5em;
+        text-align: left;
+    }
+
+    h1{
+        margin: 0;
+    }
+    h5{
+        margin: 0;
+    }
+   
+    img{
+        width: 100%;
+    }
+</style>
+
+
+<h1>Audio Steganography</h1>
+<h5>Computer Security</h5>
+
+<img src="https://image.ibb.co/jmD5mk/Stegano_UML.png" alt="Stegano UML" border="0" />
+<div id="tip">
+Process of Encoding/Decoding
+</div>
+
+<p>
+Steganography refers to the practice of hiding data in plain sight. I worked on Steganography toolkit as part of a team of three for our CS-241 (Systems Programming) Honors section.
+My teammates, Anton Bershianskiy and Dan Johnson worked on the Image and Text while I worked with Audio media, more specifically WAV file format since it doesn't require a 
+license and is not propeitary. This module is written in C, without using any external libraries.
+</p>
+<p>
+When working with a sample rate of 44.1Khz, every second of audio is stored in 44100 16-bit integers (there are floating point schemes too, but we don't need 32-bit precision for our purposes) for every channel. Mono, Stereo formats have 1 and 2 channels respectively, while Dolby formats can go upto 5 or 7 channels.
+</p>
+<p>
+16 bit samples translate to 65,536 level of amplitude or volume. Average human ears cannot accurately distinguish between such fine levels of amplitude, and we can leverage this fact
+by augmenting the lower bits to store any form of data. On changing the lower 8 bits, we introduce a noise of atmost 256 amplitude levels, which is a 0.39% change, hard for most
+humans to notice.
+</p>
+<p>
+We can make this more robust by eliminating any pattern that the secret data may have by encrypting it, which increases the entropy significantly. Hence the noise introduced would seem
+like noise only, even to computers. Distributing this data based on a random, but yet uniform function over the sample space can also introduce more entropy.
+</p>
+<p>
+The module I wrote also identifies how much padding is available, and based on the size of secret file, it would use the minimum required number of bits to store the data, upto 
+a maximum of 8-bits.
+</p>
+
+<p>
+The following spectograms show what frequencies are prominant (y-axis) at any given time (x-axis). Color encodes the amplitude where Red means higher amplitude and Blue means lower
+amplitude. All the spectorgrams were rendered via Audacity. The corresponding audio files are also embedded where relevant.
+</p>
+<img src="https://image.ibb.co/bOcee5/Ballast.png" alt="Ballast" border="0" />
+<iframe width="100%" height="160" src="https://clyp.it/enz0vymu/widget" frameborder="0"></iframe>
+<div id="tip">
+Original Audio (Ballast)
+</div>
+<img src="https://image.ibb.co/iHGKCQ/Secret1mb.jpg" alt="Secret1mb" border="0" />
+<div id="tip">
+Secret to be encoded (Any binary data, not limited to images)
+</div>
+<img src="https://image.ibb.co/etJMRk/Output.png" alt="Output" border="0" />
+<iframe width="100%" height="160" src="https://clyp.it/cuazbslk/widget" frameborder="0"></iframe>
+<div id="tip">
+Augmented Audio (Augmented Ballast)
+</div>
+<img src="https://image.ibb.co/c7W86k/Hidden.png" alt="Hidden" border="0" />
+<iframe width="100%" height="160" src="https://clyp.it/cbiketko/widget" frameborder="0"></iframe>
+<div id="tip">
+Noise introduced (Secret, Unencrypted, Linear Distribution, 8-bit  Distortion)
+</div>
+<p>
+Note: As the noise is very subtle, it's only audible on high volume. It gets muted when other background audio is present.
+</p>
+{% endblock %}

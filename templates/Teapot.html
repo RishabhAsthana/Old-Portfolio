@@ -1,0 +1,207 @@
+{% extends "Base.html"%}
+{% block content %}
+
+<style>
+
+    a {
+        text-decoration: none;
+    }
+
+    #tip {
+        text-align: center;
+        font-style: italic;
+        color: #bec5d1;
+        padding: 0
+    }
+
+    input{
+        width: 400px;
+        display: block;
+        margin: 0 auto;
+        padding-top: 0.5em;
+    }
+    p{
+        padding: 0.5em;
+        text-align: left;
+
+    }
+</style>
+
+<!-- 
+Vertex shader program for skybox
+-->
+<script id="shader-vs-cube" type="x-shader/x-vertex">
+   attribute vec3 aVertexNormal1;
+   attribute vec3 aVertexPosition1;
+   attribute vec2 aTexCoord;
+   
+   uniform mat4 uMVMatrix1;
+   uniform mat4 uPMatrix1;
+   
+   varying vec2 vTexCoord;
+
+   void main(void) { 
+     gl_Position = uPMatrix1*uMVMatrix1*vec4(aVertexPosition1, 1.0);
+     vTexCoord=aTexCoord;    
+    }
+</script>
+  
+ <!-- 
+Vertex shader program for teapot
+-->   
+<script id="shader-vs-pot" type="x-shader/x-vertex">
+   attribute vec3 aVertexPosition2;
+   attribute vec3 aVertexNormal2;
+   
+   uniform mat4 uMVMatrix2;
+   uniform mat4 uPMatrix2;
+   uniform mat3 uNMatrix;
+   uniform vec3 uLightPosition;
+   uniform vec3 uAmbientLightColor;
+   uniform vec3 uDiffuseLightColor;
+   uniform vec3 uSpecularLightColor;
+
+   varying vec4 vColor;
+   varying vec3 vVertexNormal;
+   varying vec3 R;
+   
+ 
+   
+   uniform float rotation;
+   uniform float worldRotation;
+
+   
+   const float shininess = 1.0;
+
+    void main(void) {
+    
+    // Compute rotation matrices along y-Axis 
+    float testAngle = radians(rotation);
+    float change = rotation * 0.05;
+    float changeW = radians(worldRotation) ;
+    mat4 rYt = mat4(cos(change), 0, sin(change), 0, 0, 1, 0, 0, -sin(change), 0, cos(change), 0, 0, 0, 0, 1);  
+    mat4 rYw = mat4(cos(changeW), 0, sin(changeW), 0, 0, 1, 0, 0, -sin(changeW), 0, cos(changeW), 0, 0, 0, 0, 1);   
+
+
+    // Get the vertex position in eye coordinates
+    vec4 vertexPositionEye4 = uMVMatrix2 * vec4(aVertexPosition2, 1.0);    
+    
+    vec3 vertexPositionEye3 = vertexPositionEye4.xyz / vertexPositionEye4.w;
+    
+    mat4 ModelViewMatrix = uMVMatrix2 * rYt;
+    vec4 eyePos = ModelViewMatrix * vec4(aVertexPosition2, 1.0) * rYw;
+    vec4 N = ModelViewMatrix*vec4(aVertexNormal2, 1.0) * rYw;
+    R = reflect(eyePos.zyx, N.zyx);
+
+    
+    vec4 temp = vec4(uLightPosition, 1.0);
+    temp = temp * rYt;
+    vec3 temp2 = temp.xyz / temp.w;
+    // Calculate the vector (l) to the light source
+    vec3 vectorToLightSource = normalize(temp2 - vertexPositionEye3);
+    
+    // Transform the normal (n) to eye coordinates
+    vec3 normalEye = normalize(uNMatrix * aVertexNormal2);
+    
+    // Calculate n dot l for diffuse lighting
+    float diffuseLightWeightning = max(dot(normalEye, 
+                                    vectorToLightSource), 0.0);
+                                       
+    // Calculate the reflection vector (r) that is needed for specular light
+    vec3 reflectionVector = normalize(reflect(-vectorToLightSource, 
+                                             normalEye));
+    
+    // The camera in eye coordinates is located in the origin and is pointing
+    // along the negative z-axis. Calculate viewVector (v) 
+    // in eye coordinates as:
+    //// (0.0, 0.0, 0.0) - vertexPositionEye3
+    vec3 viewVectorEye = -normalize(vertexPositionEye3);
+    
+    float rdotv = max(dot(reflectionVector, viewVectorEye), 0.0);
+    
+    float specularLightWeightning = pow(rdotv, shininess);
+    
+        //change this line to apply the uMVMatrix to you objects
+    
+    
+     vColor = vec4((uAmbientLightColor
+                + uDiffuseLightColor * diffuseLightWeightning
+                + uSpecularLightColor * specularLightWeightning),1.0);
+    
+
+    gl_Position = uPMatrix2*ModelViewMatrix*vec4(aVertexPosition2, 1.0);
+    
+    vVertexNormal = aVertexNormal2 ; 
+    }
+</script>
+    
+<!-- 
+Fragment shader program for skybox
+-->    
+<script id="shader-fs-cube" type="x-shader/x-fragment">
+precision mediump float;
+ 
+// Passed in from the vertex shader.
+varying vec2 vTexCoord;
+ 
+// The texture.
+uniform sampler2D uSampler1;
+uniform sampler2D uSampler2;
+uniform sampler2D uSampler3;
+uniform sampler2D uSampler4;
+uniform sampler2D uSampler5;
+uniform sampler2D uSampler6;
+
+
+ 
+void main() {
+   gl_FragColor = texture2D(uSampler1, vTexCoord);
+   gl_FragColor = texture2D(uSampler2, vTexCoord);
+   gl_FragColor = texture2D(uSampler3, vTexCoord);
+   gl_FragColor = texture2D(uSampler4, vTexCoord);
+   gl_FragColor = texture2D(uSampler5, vTexCoord);
+   gl_FragColor = texture2D(uSampler6, vTexCoord);
+
+}
+</script>
+
+    
+<!-- 
+Fragment shader program for teapot
+-->      
+<script id="shader-fs-pot" type="x-shader/x-fragment">
+precision mediump float;
+varying vec4 vColor;
+varying vec3 R; 
+uniform float enableReflection;
+uniform samplerCube uCubeSampler; 
+void main(void) {
+         if(enableReflection == -1.0)
+             gl_FragColor = vColor;
+         else 
+             gl_FragColor = textureCube(uCubeSampler,R);
+ }
+</script>
+
+<script src="{{ url_for('static', filename='EnvironmentMapping/gl-matrix-min.js') }}"></script> 
+<script src="{{ url_for('static', filename='EnvironmentMapping/readText.js') }}"></script> 
+<script src="{{ url_for('static', filename='EnvironmentMapping/webgl-utils.js') }}"></script>   
+<script src="{{ url_for('static', filename='EnvironmentMapping/Teapot.js') }}"></script> 
+<body onload="startup();">
+<h2> Environment Mapping </h2>
+<h5> Computer Graphics </h5>
+<canvas id="myGLCanvas" width="400" height="400"></canvas>
+<input type="range" min="0" max="360" value="0" step="1" oninput="orbit(this.value)">
+<p id="tip">
+Use the slider to orbit
+</p>
+<p id="tip">
+This website is self-hosted on a RaspberryPi 3, so the images may take a while to load.
+</p>
+<p> 
+Reflective objects are very common in nature. In Computer Graphics, they can be simulated in the same way as it happens in nature, by raycasting. However raycasting is a very expensive process, and not usually suited for real time graphic applications. 
+</p>
+<p>
+Instead of rendering the color of each pixel based off what light color reflects off of it sixty frames a second, we can instead take the environment, and map it as a texture to the object that needs to made reflective. This technique is called <a href="https://en.wikipedia.org/wiki/Reflection_mapping">Environment Mapping</a> and this can help us acheive the same reflection details as we would perceive if we were performing raycasting, but in a very efficient manner. One caveat that exists is that we need the textures of the environment we wish to reflect on the object to be precomputed, and these set of textures are called Environment maps. The teapot above is made reflective by implementing the most popular type of environment mapping called <a href="https://en.wikipedia.org/wiki/Cube_mapping"> Cube mapping </a>. The cube map used is shown as the skybox around the teapot.
+</p>
+{% endblock %}
